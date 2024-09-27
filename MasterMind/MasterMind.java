@@ -32,7 +32,6 @@ public class MasterMind {
 		master = new PegArray(PEGS_IN_CODE);
 		for(int i = 0; i < PEGS_IN_CODE; i++){
 			int number = dice.roll();
-			master.Peg.setLetter((char)(number + 'A');
 		}
 	}
 	/**
