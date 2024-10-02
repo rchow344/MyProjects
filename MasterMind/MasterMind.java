@@ -37,16 +37,17 @@ public class MasterMind {
 	public void generateMasterKey(){
 		for (int i = 0; i < PEGS_IN_CODE; ++i) {
             int number = dice.roll();
-            char character = (char)((int)('A') + number);
+            char character = (char)((int)('A') + number - 1);
             master.getPeg(i).setLetter(character);
+            System.out.print(master.getPeg(i).getLetter());
         }
 	}
 	/**
 	 *
 	 */
 	public void playGame(){
-		int exact = 0;
 		int guessNumber = 0;
+		int exact = 0;
 		String guess = "";
 		Prompt.getString("Hit the Enter key to start the game");
 		do{
@@ -67,8 +68,8 @@ public class MasterMind {
 			+ ". For example, ABCD or abcd from left-to-right");
 			guess = guess.toUpperCase();
 			for(int i = 0; i < guess.length(); i++){
-				if(guess.charAt(i) >= 'A' && guess.charAt(i) <= 'F') continue;
-				validGuess = false;
+				if(guess.charAt(i) >= 'A' && guess.charAt(i) <= 'F') validGuess = true;
+				else validGuess = false;
 			}
 			if(guess.length() != 4) validGuess = false;
 			if(!validGuess) System.out.println("ERROR: Bad input, try again.");
@@ -154,6 +155,7 @@ public class MasterMind {
 		else
 			for (int p = 0; p < PEGS_IN_CODE; p++)
 				System.out.print("       |");
+		if(guesses[t].getExact() == 0) guesses[t].getExactMatches(master);
 		System.out.printf("   %d      %d    |\n",
 							guesses[t].getExact(), guesses[t].getPartial());
 	}

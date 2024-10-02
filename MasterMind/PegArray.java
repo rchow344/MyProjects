@@ -21,6 +21,8 @@ public class PegArray {
 	 *	@param numPegs	number of pegs in the array
 	 */
 	public PegArray(int numPegs) {
+		exactMatches = 0;
+		partialMatches = 0;
 		pegs = new Peg[numPegs];
 		for (int i = 0; i < pegs.length; i++){
 			pegs[i] = new Peg();
@@ -39,7 +41,12 @@ public class PegArray {
 	 *  @param master	The master (code) peg array
 	 *	@return			The number of exact matches
 	 */
-	public int getExactMatches(PegArray master) { return 0; }
+	public int getExactMatches(PegArray master) { 
+		for(int i = 0; i < pegs.length; i++){
+			if(master.getPeg(i).getLetter() == pegs[i].getLetter()) exactMatches++;
+		}
+		return exactMatches;
+		}
 	
 	/**
 	 *  Find partial matches between master (key) peg array and this peg array
