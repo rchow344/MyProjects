@@ -22,6 +22,9 @@ public class PegArray {
 	 */
 	public PegArray(int numPegs) {
 		pegs = new Peg[numPegs];
+		for (int i = 0; i < pegs.length; i++){
+			pegs[i] = new Peg();
+		}
 	}
 	/**
 	 *	Return the peg object

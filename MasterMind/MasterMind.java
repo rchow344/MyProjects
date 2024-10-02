@@ -14,7 +14,6 @@ public class MasterMind {
 	private Dice dice;
 	
 	// Constants
-	private final int ASCII_A = 65;			// ASCII value of 'A'
 	private final int PEGS_IN_CODE = 4;		// Number of pegs in code
 	private final int MAX_GUESSES = 10;		// Max number of guesses
 	private final int PEG_LETTERS = 6;		// Number of different letters on pegs
@@ -23,16 +22,58 @@ public class MasterMind {
 	/** Constructor */
 	public MasterMind(){
 		dice = new Dice();
+		master = new PegArray(PEGS_IN_CODE);
+		guesses = new PegArray[MAX_GUESSES];
+		for(int i = 0; i < MAX_GUESSES; i++){
+			guesses[i] = new PegArray(PEGS_IN_CODE);
+		}
 		generateMasterKey();
+		printIntroduction();
+		playGame();
 	}
 	/**
 	 *  Generates the master key
 	 */
 	public void generateMasterKey(){
-		master = new PegArray(PEGS_IN_CODE);
-		for(int i = 0; i < PEGS_IN_CODE; i++){
-			int number = dice.roll();
+		for (int i = 0; i < PEGS_IN_CODE; ++i) {
+            int number = dice.roll();
+            char character = (char)((int)('A') + number);
+            master.getPeg(i).setLetter(character);
+        }
+	}
+	/**
+	 *
+	 */
+	public void playGame(){
+		int exact = 0;
+		int guessNumber = 0;
+		String guess = "";
+		Prompt.getString("Hit the Enter key to start the game");
+		do{
+			printBoard();
+			System.out.println("\nGuess " + (guessNumber+1) + "\n");
+			guess = obtainGuess();
+			for(int i = 0; i < PEGS_IN_CODE; i++){
+				guesses[guessNumber].getPeg(i).setLetter(guess.charAt(i));
+			}
+		} while(exact < PEGS_IN_CODE && guessNumber++ < MAX_GUESSES);
+	}
+	public String obtainGuess(){
+		String guess = "";
+		boolean validGuess = false;
+		while (!validGuess){
+			validGuess = true;
+			guess = Prompt.getString("Enter the code using (A,B,C,D,E,F)"
+			+ ". For example, ABCD or abcd from left-to-right");
+			guess = guess.toUpperCase();
+			for(int i = 0; i < guess.length(); i++){
+				if(guess.charAt(i) >= 'A' && guess.charAt(i) <= 'F') continue;
+				validGuess = false;
+			}
+			if(guess.length() != 4) validGuess = false;
+			if(!validGuess) System.out.println("ERROR: Bad input, try again.");
 		}
+		return guess;
 	}
 	/**
 	 *	Print the introduction screen
