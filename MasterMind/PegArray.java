@@ -54,11 +54,29 @@ public class PegArray {
 	 *  @param master	The master (code) peg array
 	 *	@return			The number of partial matches
 	 */
-	public int getPartialMatches(PegArray master) { return 0; }
+	public int getPartialMatches(PegArray master) {
+		int index = 0;
+		char [] userPegs = new char[pegs.length];
+		char [] masterPegs = new char[pegs.length];
+		for(int i = 0; i < pegs.length; i++){
+			userPegs[i] = pegs[i].getLetter();
+			masterPegs[i] = master.getPeg(i).getLetter();
+		}
+		for(int i = 0; i < pegs.length; i++){
+			for(int j = 0; j < pegs.length; j++){
+				if(userPegs[j] == masterPegs[i] && i != j){
+					partialMatches++;
+					j+=4;
+				}
+			}
+		}
+		partialMatches -= exactMatches;
+		if(exactMatches == pegs.length) partialMatches = 0;
+		return partialMatches;
+		}
 	
 	// Accessor methods
 	// Precondition: getExactMatches() and getPartialMatches() must be called first
 	public int getExact() { return exactMatches; }
 	public int getPartial() { return partialMatches; }
-
 }

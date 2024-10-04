@@ -12,6 +12,7 @@ public class MasterMind {
 	private PegArray[] guesses;		// the array of guessed peg arrays
 	private PegArray master;		// the master (key) peg array
 	private Dice dice;
+	private int guessNumber;
 	
 	// Constants
 	private final int PEGS_IN_CODE = 4;		// Number of pegs in code
@@ -21,6 +22,7 @@ public class MasterMind {
 
 	/** Constructor */
 	public MasterMind(){
+		guessNumber = 0;
 		dice = new Dice();
 		master = new PegArray(PEGS_IN_CODE);
 		guesses = new PegArray[MAX_GUESSES];
@@ -46,18 +48,30 @@ public class MasterMind {
 	 *
 	 */
 	public void playGame(){
-		int guessNumber = 0;
 		int exact = 0;
-		String guess = "";
 		Prompt.getString("Hit the Enter key to start the game");
 		do{
-			printBoard();
-			System.out.println("\nGuess " + (guessNumber+1) + "\n");
-			guess = obtainGuess();
-			for(int i = 0; i < PEGS_IN_CODE; i++){
-				guesses[guessNumber].getPeg(i).setLetter(guess.charAt(i));
-			}
-		} while(exact < PEGS_IN_CODE && guessNumber++ < MAX_GUESSES);
+			exact = guesses[guessNumber].getExact();
+			playTurn();
+			guessNumber++;
+		} while(guessNumber < MAX_GUESSES && exact < PEGS_IN_CODE);
+		printBoard();
+		if(guessNumber == 10) System.out.print("Oops. You were unable"
+		+ " to find the solution in 10 guesses.");
+		else System.out.print("Nice work! You found the master" +
+		" code in " + guessNumber + " guesses.");
+	}
+	/**
+	 *  
+	 */
+	public void playTurn(){
+		String guess = "";
+		printBoard();
+		System.out.println("\nGuess " + (guessNumber+1) + "\n");
+		guess = obtainGuess();
+		for(int i = 0; i < PEGS_IN_CODE; i++){
+			guesses[guessNumber].getPeg(i).setLetter(guess.charAt(i));
+		}
 	}
 	public String obtainGuess(){
 		String guess = "";
@@ -156,6 +170,7 @@ public class MasterMind {
 			for (int p = 0; p < PEGS_IN_CODE; p++)
 				System.out.print("       |");
 		if(guesses[t].getExact() == 0) guesses[t].getExactMatches(master);
+		if(guesses[t].getPartial() == 0) guesses[t].getPartialMatches(master);
 		System.out.printf("   %d      %d    |\n",
 							guesses[t].getExact(), guesses[t].getPartial());
 	}
