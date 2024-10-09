@@ -106,7 +106,7 @@ public class Wordle
 		// args[1] is a word which is used as the chosen word
 		//testWord = scan.next();
 		//showIt = scan.next();
-		testWord = "hello";
+		testWord = "";
 
 		Wordle run = new Wordle(showIt, testWord);
 		run.setUpCanvas();
@@ -180,7 +180,7 @@ public class Wordle
 			lines++;
 			if(randomInt == lines) result = current;
 		}
-		return result;
+		return result.toUpperCase();
 	}
 
 	/** 
@@ -193,7 +193,13 @@ public class Wordle
 	 */
 	public boolean inAllowedWordFile(String possibleWord)
 	{
-		
+		Scanner readIn = new Scanner(System.in);
+		String inFile = "words5allowed.txt"; 
+		readIn = FileUtils.openToRead(inFile);
+		while(readIn.hasNextLine()){
+			String current = readIn.nextLine();
+			if(current.toUpperCase().equals(possibleWord)) return true;
+		}
 		return false;
 	}
 	
@@ -209,19 +215,20 @@ public class Wordle
 	public void processGuess ( )
 	{
 		letters = letters.toUpperCase();
-		
+		boolean allowed = inAllowedWordFile(letters);
 		// if guess is in words5allowed.txt then put into guess list
+		if(allowed){
 		int guessNumber = 0;
 		for(int i = 0; i < wordGuess.length; i++)
 		{
-			if(wordGuess[i].length() == 5)
+			if(wordGuess[i].length() == letters.length())
 			{
 				guessNumber = i + 1;
 			}
 		}
 		wordGuess[guessNumber] = letters.toUpperCase();
 		letters = "";
-		
+		}
 		// else if guess is not in words5allowed.txt then print dialog box
 
 	}
@@ -239,7 +246,17 @@ public class Wordle
 		// Determine color of guessed letters and draw backgrounds
 	 	// 0 for not checked yet, 1 for no match, 2 for partial, 3 for exact
 		// draw guessed letter backgrounds
-
+		int [][] matches = new int [5][wordGuess.length];
+		boolean [] userMatched = new boolean[letters.length()];
+		for(int i = 0; i < letters.length(); i++){
+			for(int j = 0; j < wordGuess.length; j++){
+				if(wordGuess[j].length() != 0){
+					if(wordGuess[j].charAt(i) == word.charAt(i)) matches[i][j] = 3;	
+					System.out.println(matches[i][j]);
+				}
+				else matches[i][j] = 1;
+			}
+		}
 
 
 
@@ -250,7 +267,8 @@ public class Wordle
 			{
 				if(wordGuess[row].length() != 0)											//  THIS METHOD IS INCOMPLETE.
 				{
-					StdDraw.picture(209 + col * 68, 650 - row * 68, "letterFrameDarkGray.png");
+					if(matches[col][row] == 3) 	StdDraw.picture(209 + col * 68, 650 - row * 68, "letterFrameGreen.png");
+					else StdDraw.picture(209 + col * 68, 650 - row * 68, "letterFrameDarkGray.png");
 				}
 				else
 				{
