@@ -115,7 +115,6 @@ public class Wordle {
 		//testWord = scan.next();
 		//showIt = scan.next();
 		if (args.length > 0) showIt = args[0];
-
 		if (args.length > 1) testWord = args[1].toUpperCase();
 
 		Wordle run = new Wordle(showIt, testWord);
@@ -220,7 +219,6 @@ public class Wordle {
 
 		while (readIn.hasNextLine()) {
 			String current = readIn.nextLine();
-
 			if (current.toUpperCase().equals(possibleWord)) return true;
 		}
 
@@ -280,14 +278,17 @@ public class Wordle {
 		for (int row = 0; row < 6; row++) {
 			int[] currentColor = { 0, 0, 0, 0, 0 };
 
+			//	if wordGuess[row] contains a guess.
 			if (wordGuess[row].length() == 5) {
 				wordChars = new char[5];
 				guessChars = new char[5];
 
+				//	fill char arrays with characters.
 				for (int i = 0; i < word.length(); i++) {
 					guessChars[i] = wordGuess[row].charAt(i);
 					wordChars[i] = word.charAt(i);
 
+					//	check for exacts.
 					if (wordChars[i] == guessChars[i]) {
 						currentColor[i] = 3;
 						wordChars[i] = '1';
@@ -298,6 +299,7 @@ public class Wordle {
 				for (int i = 0; i < wordChars.length; i++) {
 					if (currentColor[i] != 3) {
 						for (int j = 0; j < guessChars.length; j++) {
+							//	check for partials, if not exact already.
 							if (currentColor[j] != 3 && wordChars[i] == guessChars[j]) {
 								currentColor[j] = 2;
 								wordChars[i] = '1';
@@ -306,20 +308,23 @@ public class Wordle {
 					}
 				}
 
+				//	set no match.
 				for (int i = 0; i < currentColor.length; i++) {
 					if (currentColor[i] == 0) currentColor[i] = 1;
 				}
 
+				//	sets color of letters in keyboard.
 				for (int i = 0; i < 5; i++) {
-					char x = wordGuess[row].charAt(i);
+					char letter = wordGuess[row].charAt(i);
 
 					for (int j = 0; j < Constants.KEYBOARD.length; j++) {
-						if (keyBoardColors[j] != currentColor[i] && Constants.KEYBOARD[j].charAt(0) == x)
+						if (keyBoardColors[j] != currentColor[i] && Constants.KEYBOARD[j].charAt(0) == letter)
 							keyBoardColors[j] = currentColor[i];
 					}
 				}
 			}
 
+			//	changes color of letters.
 			for (int col = 0; col < 5; col++) {
 				if (wordGuess[row].length() != 0) {
 					switch (currentColor[col]) {
@@ -337,16 +342,19 @@ public class Wordle {
 			}
 		}
 
-		// draw Wordle board
+		//	draw Wordle board
 		Font font = new Font("Arial", Font.BOLD, 12);
 		StdDraw.setFont(font);
 		StdDraw.picture(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - 30, "wordle.png");
 
-		// draw keyboard with appropriate colors
+		//	draw keyboard with appropriate colors
 		StdDraw.setPenColor(StdDraw.LIGHT_GRAY);
 		int place = 0;
 		String tempWord = "";
 
+		//  This needs to be modified a great deal,
+		//  so that the correct colors show up.
+		//	changes color of letters in keyboard.
 		for (int[] pair: Constants.KEYPLACEMENT) {
 			if (place == 19 || place == 27 || place == 28)
 				StdDraw.picture(pair[0], pair[1], "keyBackgroundBig.png");
@@ -357,18 +365,14 @@ public class Wordle {
 			else if (keyBoardColors[place] == 3)
 				StdDraw.picture(pair[0], pair[1], "keyBackgroundGreen.png");
 
-			//  This needs to be modified a great deal,
-			//  so that the correct colors show up.
 			else {
 				StdDraw.picture(pair[0], pair[1], "keyBackground.png");
 
 			}
-
 			StdDraw.setPenColor(StdDraw.BLACK);
 			StdDraw.text(pair[0], pair[1], Constants.KEYBOARD[place]);
 			place++;
 		}
-
 		// draw guesses
 		drawAllLettersGuessed();
 
@@ -419,6 +423,7 @@ public class Wordle {
 	public void checkIfWonOrLost() {
 		String lastWord = "";
 
+		//	iterates through loop until recent guess.
 		for (int i = 0; i < wordGuess.length; i++) {
 			if (wordGuess[i].length() == 5) {
 				lastWord = wordGuess[i];
