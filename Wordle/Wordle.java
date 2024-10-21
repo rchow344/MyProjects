@@ -1,4 +1,3 @@
-
 import java.util.List;
 import java.util.ArrayList;
 import java.awt.Color;
@@ -12,7 +11,11 @@ import javax.swing.JDialog;
 /**
  *	Wordle.java
  *
- *	Provide a description here.
+ *	Simulates popular word game Wordle. Uses StdDraw class for the Graphical User Interface.
+ *	Includes logic to manage how words are displayed and changed throughout the game.
+ *	Once user gets the word, user may choose to play again. Main method reads in arguments
+ *	to determine whether the program shows the word, and which word, if wanted, at that.
+ *	Uses JOptionPane and JDialog to display smaller parts of the GUI.
  *
  *	@author	Scott DeRuiter and David Greenstein and Riley Chow
  *	@version	1.0
