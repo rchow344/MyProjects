@@ -1,3 +1,4 @@
+
 import java.util.List;
 import java.util.ArrayList;
 import java.awt.Color;
@@ -175,22 +176,21 @@ public class Wordle {
 		Scanner readIn = new Scanner(System.in);
 		readIn = FileUtils.openToRead(inFileName);
 
+		//	if testWord is valid, then use it.
 		if (inAllowedWordFile(testWord)) result = testWord;
 		else {
+			//	find number of lines
 			while (readIn.hasNextLine()) {
 				String current = readIn.nextLine();
-
-				if (current.equals(testWord)) {
-					result = testWord;
-				}
-
 				lines++;
 			}
 
+			//	generate ran. number based of num of lines.
 			randomInt = (int)(Math.random() * lines) + 1;
 			lines = 0;
 			readIn = FileUtils.openToRead(inFileName);
 
+			//	find the random line.
 			while (readIn.hasNextLine()) {
 				String current = readIn.nextLine();
 				lines++;
@@ -201,7 +201,7 @@ public class Wordle {
 
 		if (show) System.out.println(result);
 		return result.toUpperCase();
-	}
+	
 
 	/** 
 	 *	Checks to see if the word in the parameter list is found in the text file
@@ -217,6 +217,7 @@ public class Wordle {
 		String inFile = "words5allowed.txt";
 		readIn = FileUtils.openToRead(inFile);
 
+		//	Check if possibleWord is a word inside the file.
 		while (readIn.hasNextLine()) {
 			String current = readIn.nextLine();
 			if (current.toUpperCase().equals(possibleWord)) return true;
